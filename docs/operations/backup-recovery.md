@@ -71,6 +71,9 @@ The project rebuilds the *setup*. The off-host copy rebuilds the *worlds*. You n
 
 A backup you have never restored is a guess. Once — right now is a good time — restore a backup onto a throwaway server and see that it works. Then you know, instead of hoping.
 
----
+<div class="pager" markdown="1">
 
-**Next:** [When something breaks](../guides/troubleshooting.md)
+- [← Step 4 — Invite your friends](../getting-started/invite-friends.md)
+- [Next: When something breaks →](../guides/troubleshooting.md)
+
+</div>

@@ -66,6 +66,9 @@ Two kinds of files, kept deliberately apart:
 
 That is why a backup of the project is *not* a backup of your world. See [Keep it safe](../operations/backup-recovery.md).
 
----
+<div class="pager" markdown="1">
 
-**Next:** [Set up Crafty](start-crafty.md)
+- [← Start here](../index.md)
+- [Next: Step 2 — Set up Crafty →](start-crafty.md)
+
+</div>
