@@ -8,14 +8,16 @@ A **whitelist** is a guest list. If your name is on it you can join; if it is no
 
 Turn it on *before* anyone else gets the address. It is set per server, not once for all of Crafty.
 
-Crafty has no whitelist buttons, so this one is typed. **Open the server → the Terminal tab → the box at the bottom.** That box talks to the Minecraft server, not to the computer, so there is nothing here you can break. With the server running, type these one at a time:
+Crafty has no whitelist buttons, so this one is typed. On the dashboard, click your server, open its **Terminal** tab, and find the input box *below* the console output — the one reading *Enter your command*. That box talks to the Minecraft server, not to the computer, so there is nothing here you can break.
+
+With the server running, type these one at a time, pressing Enter after each (or clicking **Send command**):
 
 ```text
 whitelist on
 whitelist add PlayerName
 ```
 
-Use their exact Minecraft username — spelling matters, capital letters do not. The Terminal answers you after each line, so you can see it worked.
+Use their exact Minecraft username — spelling matters, capital letters do not. The console prints a reply above the box after each line, so you can see it worked. The up arrow key brings back the last thing you typed, which saves retyping `whitelist add` for each friend.
 
 To remove someone, or to see who is on the list:
 
@@ -26,7 +28,7 @@ whitelist list
 
 Then one more setting, in the file:
 
-**Files** tab → `server.properties` → find `enforce-whitelist` → set it to `true` → save → restart the server.
+**Files** tab → click `server.properties` in the list → find the `enforce-whitelist` line → change it to `enforce-whitelist=true` → click **Save Changes** → restart the server.
 
 That one kicks out anyone already online who is not on the list, instead of only checking at the door. `whitelist on` alone already keeps strangers out, so if the file part looks scary, do it later — just do not skip it forever.
 
@@ -98,7 +100,7 @@ If you later want friendly names without port numbers, that is what DNS SRV reco
 
 Whoever is on your server is on your computer, in your world. It is entirely reasonable to say out loud what is and is not okay — griefing, stealing, who can use ops, who gets to invite people. Doing it early is easier than doing it after an argument.
 
-And if someone will not stop, this one *does* have buttons: the **Player Management** tab has **Kick**, **Ban** and **Unban**. Or just take them off the whitelist, which is quieter and works just as well. It is your server.
+And if someone will not stop, this one *does* have buttons: the server's **Player Management** tab lists who is online and who is banned, with **Kick**, **Ban** and **Unban** next to them. Or just take them off the whitelist, which is quieter and works just as well. It is your server.
 
 <div class="pager" markdown="1">
 

@@ -28,6 +28,27 @@ Type it (or copy it), press Enter, done. Some commands need administrator rights
 
 > **First time in a terminal?** A terminal is a window where you type commands instead of clicking. You type one line, press Enter, and the computer answers. Nothing happens until you press Enter, so it is safe to read a command twice before you commit.
 
+## Where to type them
+
+You need a terminal window on the computer that will run the server. Which way depends on whether that computer has a screen you can sit at.
+
+**If you are sitting at it, with a screen and keyboard:**
+
+- Open the applications menu and search for **Terminal**, or
+- press **Ctrl + Alt + T**, which opens one on most Linux desktops.
+
+A window appears with a line of text ending in `$` or `#`. That is the prompt, waiting for you. Type after it.
+
+**If it is a machine in a cupboard with no screen** — which is normal for a home server — you connect to it from your own computer instead:
+
+```bash
+ssh yourname@192.0.2.10
+```
+
+Replace `yourname` with the username on that machine and `192.0.2.10` with its address; ask whoever set it up for both. It asks for a password, shows nothing while you type it, and then you get that machine's prompt in your window. Everything on this page happens there.
+
+If `ssh` is new to you, it is worth knowing what it is doing: giving you a terminal on *another* computer, over the network, as if you were sitting at it.
+
 ## 1. Copy the project onto the host
 
 Do this on the computer that will run the server.
@@ -47,7 +68,13 @@ The project ships an example settings file. You copy it and edit your copy:
 cp .env.example .env
 ```
 
-Open `.env` in a text editor (`nano .env` works everywhere) and check these four lines:
+Now open your copy in a text editor. `nano` is the friendliest one and is almost always installed:
+
+```bash
+nano .env
+```
+
+That fills the terminal window with the file's contents. Move around with the arrow keys — not the mouse — and type normally. Check these four lines:
 
 | Setting | What it means |
 | --- | --- |
@@ -56,7 +83,7 @@ Open `.env` in a text editor (`nano .env` works everywhere) and check these four
 | `CRAFTY_HTTPS_PORT` | The port you will use to reach the Crafty website. `8443` is fine. |
 | `MC_JAVA_PORT_RANGE` | The ports your Minecraft servers may use. `25565-25575` is fine. |
 
-In nano, save with `Ctrl+O` then Enter, and leave with `Ctrl+X`.
+When you are done: **Ctrl + O** then Enter to save (it asks you to confirm the file name — just press Enter), then **Ctrl + X** to leave. Nano lists these shortcuts along the bottom of the window, where `^O` means Ctrl + O.
 
 > **`.env` stays on this computer.** It is deliberately ignored by Git, and it should never be uploaded anywhere. See [Public repository safety](../project/public-repo-safety.md).
 

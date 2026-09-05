@@ -8,7 +8,7 @@ Your first server is not precious. Make one, poke at it, break it, delete it. Ma
 
 ## Where everything is in Crafty
 
-Click a server on the dashboard and you get a row of tabs. You will mostly live in the first four:
+The **dashboard** is Crafty's front page — the list of your servers. Click a server's name and you land on its own page, with a row of tabs across the top. You will mostly live in the first four:
 
 | Tab | What it is for |
 | --- | --- |
@@ -22,9 +22,13 @@ Click a server on the dashboard and you get a row of tabs. You will mostly live 
 
 > **"Terminal" here is not the computer's terminal.** It is a box on a web page, and what you type goes to the Minecraft server, not to Linux. You cannot break the computer with it. This is where a few Minecraft things are done, because Crafty has no buttons for them.
 
+On the Terminal tab, the server's output fills most of the page, and **below it** is an input box reading *Enter your command*. Type there and press Enter, or click **Send command**. The up arrow key brings back what you typed before.
+
+To get back to the list of servers, use the dashboard link in Crafty's own menu.
+
 ## Creating the server
 
-Start the new-server wizard from the dashboard. It asks these, roughly in this order:
+On the dashboard, the **All Servers** card has a **Create New Server** button in its top-right corner. That opens a wizard that walks you through a few screens, asking these:
 
 | Field | First-time answer | Why |
 | --- | --- | --- |
@@ -49,7 +53,9 @@ At some point a box appears titled **Agree To EULA**, asking whether you agree. 
 
 ## Start it and watch the Terminal
 
-Press start, then open the **Terminal** tab.
+The dashboard's server list has an **Actions** column on the right, with small icon buttons: **Start** when the server is stopped, and **Stop**, **Restart** and **Kill Process** when it is running.
+
+Press **Start**, then open the server's **Terminal** tab and watch.
 
 The first start is slow — the server is generating a world out of nothing. Wait for a line like `Done (34.5s)!`.
 
@@ -57,10 +63,14 @@ If it fills with red text and stops, do not panic: [When something breaks](../gu
 
 ## Join your own server
 
-In Minecraft: Java Edition, go to **Multiplayer** → **Add Server**.
+In Minecraft: Java Edition, click **Multiplayer** on the main menu, then **Add Server** at the bottom. Two boxes appear:
 
-- Playing on the same computer the server runs on: `localhost`
-- Playing on another computer at home: that computer's address, for example `192.0.2.10`
+- **Server Name** is only a label for your own list. Call it anything.
+- **Server Address** is the part that matters:
+  - Playing on the same computer the server runs on: `localhost`
+  - Playing on another computer at home: that computer's address, for example `192.0.2.10`
+
+Click **Done**, then double-click the server in the list to join it. A green signal bar on the right means it answered; a red X means it did not.
 
 Do not know the address? Ask whoever set the computer up. The port is on the server's **Config** tab as **Server Port** — if it is not `25565`, put it after a colon: `192.0.2.10:25566`.
 
@@ -70,7 +80,7 @@ You should now be standing in your own world. That is the whole thing working.
 
 The game rules live in a file called `server.properties`. To edit it:
 
-**Files** tab → find `server.properties` → open it → change the value after the `=` → save → restart the server.
+**Files** tab → find `server.properties` in the file list → click it to open the editor → change the value after the `=` → click **Save Changes** → restart the server.
 
 There is no separate settings screen for these; the file *is* the settings screen. The ones worth knowing early:
 
@@ -91,9 +101,10 @@ Almost all of them need a restart before they do anything.
 
 Use Crafty's buttons. Do not close the browser tab and switch the computer off — a Minecraft server keeps parts of the world in memory and writes them out when it shuts down properly. Cutting the power mid-write is how worlds get corrupted.
 
-- **Stop** before you change files or do maintenance.
+- **Stop** before you change files or do maintenance. It asks the server to shut down properly and save.
 - **Restart** after settings changes.
 - **Start** when it is stopped.
+- **Kill Process** is not a normal button. It stops the server dead, without saving, and is only for a server that has frozen and will not respond to Stop. Treat it as the last resort it is.
 
 ## Changing things later
 
