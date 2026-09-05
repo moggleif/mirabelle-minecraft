@@ -1,0 +1,6 @@
+title: Minecraft Server with Crafty Controller
+description: Documentation for a small, understandable Crafty Controller and Minecraft server setup.
+theme: minima
+markdown: kramdown
+url: https://moggleif.github.io
+baseurl: /mirabelle-minecraft

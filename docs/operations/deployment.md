@@ -2,7 +2,7 @@
 
 This document is for the person responsible for the Linux host, Docker, networking and Crafty itself.
 
-Minecraft administration should normally happen in Crafty instead. See [CRAFTY-GUIDE.md](CRAFTY-GUIDE.md).
+Minecraft administration should normally happen in Crafty instead. See [Crafty user guide](../getting-started/crafty.md).
 
 ## Repository vs runtime data
 

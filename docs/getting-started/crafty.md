@@ -41,7 +41,7 @@ A simple first-server checklist:
 9. Add the players who should be allowed to join.
 10. Create a backup after the initial setup is working.
 
-See [SERVER-SIZING.md](SERVER-SIZING.md) for memory and port guidance.
+See [Server sizing and ports](../guides/server-sizing.md) for memory and port guidance.
 
 ## Whitelist
 
@@ -102,7 +102,7 @@ Do not assume that more memory always makes Minecraft faster. Performance can al
 
 If several servers are running simultaneously, their combined memory limits must leave enough memory for Linux, Docker and Crafty itself.
 
-See [SERVER-SIZING.md](SERVER-SIZING.md) for examples.
+See [Server sizing and ports](../guides/server-sizing.md) for examples.
 
 ## Starting, stopping and restarting
 
@@ -137,7 +137,7 @@ Create backups before:
 
 Backups are not only for disasters. They make experimentation cheap.
 
-See [BACKUP-RECOVERY.md](BACKUP-RECOVERY.md).
+See [Backup and recovery](../operations/backup-recovery.md).
 
 ## Things that belong outside Crafty
 
@@ -152,4 +152,4 @@ The following are host/infrastructure tasks rather than Minecraft tasks:
 - off-host backups;
 - Git repository maintenance.
 
-These are covered in the infrastructure documentation rather than this guide.
+These are covered in [Deployment and host operations](../operations/deployment.md).

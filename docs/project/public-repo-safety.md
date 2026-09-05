@@ -2,7 +2,7 @@
 
 This project is intended to be reusable and can be published, but changing a Git repository from private to public publishes more than the files visible on the current branch. **Git history, commit metadata, branches, tags, issues, Actions logs and other repository metadata may also become visible.**
 
-Use this checklist before changing repository visibility.
+Use this checklist before changing repository visibility or when reviewing changes to a public repository.
 
 ## 1. Keep deployment-specific information local
 
@@ -56,14 +56,14 @@ git diff --cached
 
 Removing a sensitive file in a later commit does **not** remove it from earlier commits.
 
-Before publication, inspect the repository history rather than only the current checkout:
+Inspect repository history rather than only the current checkout:
 
 ```bash
 git log --all --stat
 git log -p --all
 ```
 
-The repository also runs Gitleaks in GitHub Actions with full history checked out. Verify that the **Secret scan** workflow is green before publication.
+The repository also runs Gitleaks in GitHub Actions with full history checked out. Verify that the **Secret scan** workflow is green.
 
 If a real secret has ever been committed, rotate/revoke the secret first. History rewriting is secondary; a secret should be treated as compromised once committed.
 
@@ -99,7 +99,7 @@ Changing Git configuration only affects future commits. Removing an email addres
 
 Repository names, branch names, commit messages and documentation are public metadata too.
 
-Before publication, decide deliberately whether names of people, households, schools, locations or projects should be associated with the public repository. This is a privacy decision even when it is not a technical security vulnerability.
+Decide deliberately whether names of people, households, schools, locations or projects should be associated with the public repository. This is a privacy decision even when it is not a technical security vulnerability.
 
 ## 7. Minimize exposed services
 
@@ -124,9 +124,9 @@ When updating an Action:
 4. keep a version comment next to the SHA;
 5. review the resulting workflow run.
 
-## 9. GitHub security settings after publication
+## 9. GitHub security settings
 
-For public repositories, enable or verify GitHub's repository security features under **Settings → Advanced Security**, especially:
+For a public repository, enable or verify GitHub's repository security features under **Settings → Advanced Security**, especially:
 
 - secret scanning;
 - push protection;
@@ -134,9 +134,9 @@ For public repositories, enable or verify GitHub's repository security features 
 
 GitHub provides secret scanning for public repositories. The repository-level Gitleaks workflow remains useful as an additional independent check.
 
-## Publication checklist
+## Public repository checklist
 
-Before changing visibility to public, verify all of the following:
+Verify all of the following:
 
 - current files contain no deployment-specific secrets or unnecessary personal data;
 - Git history has been reviewed;
@@ -148,4 +148,4 @@ Before changing visibility to public, verify all of the following:
 - documentation uses examples rather than private infrastructure details;
 - no Actions logs or artifacts contain sensitive data.
 
-Only then change the repository visibility.
+See the repository [security policy](https://github.com/moggleif/mirabelle-minecraft/blob/main/SECURITY.md) for handling security problems and accidentally committed secrets.
