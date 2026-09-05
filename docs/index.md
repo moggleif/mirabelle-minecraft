@@ -21,7 +21,8 @@ Use these guides for Docker, networking, upgrades and recovery.
 ### Understand the project
 
 - [Public repository safety](project/public-repo-safety.md) — secret hygiene, Git history and safe public repository practices.
-- [Security policy](../SECURITY.md) — how security issues and accidentally committed secrets are handled.
+- [Security policy](https://github.com/moggleif/mirabelle-minecraft/blob/main/SECURITY.md) — how security issues and accidentally committed secrets are handled.
+- [GitHub repository](https://github.com/moggleif/mirabelle-minecraft) — source, issues, pull requests and release history.
 
 ## Architecture
 
