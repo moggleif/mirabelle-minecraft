@@ -8,26 +8,27 @@ A **whitelist** is a guest list. If your name is on it you can join; if it is no
 
 Turn it on *before* anyone else gets the address. It is set per server, not once for all of Crafty.
 
-The quickest way is the server console in Crafty. With the server running, type:
+Crafty has no whitelist buttons, so this one is typed. **Open the server → the Terminal tab → the box at the bottom.** That box talks to the Minecraft server, not to the computer, so there is nothing here you can break. With the server running, type these one at a time:
 
 ```text
 whitelist on
 whitelist add PlayerName
 ```
 
-Use their exact Minecraft username — spelling matters. To remove someone:
+Use their exact Minecraft username — spelling matters, capital letters do not. The Terminal answers you after each line, so you can see it worked.
+
+To remove someone, or to see who is on the list:
 
 ```text
 whitelist remove PlayerName
+whitelist list
 ```
 
-Then add one more setting in that server's `server.properties`, which you can edit from Crafty:
+Then one more setting, in the file:
 
-```properties
-enforce-whitelist=true
-```
+**Files** tab → `server.properties` → find `enforce-whitelist` → set it to `true` → save → restart the server.
 
-That one kicks out anyone already online who is not on the list, instead of only checking at the door. It takes effect after a restart.
+That one kicks out anyone already online who is not on the list, instead of only checking at the door. `whitelist on` alone already keeps strangers out, so if the file part looks scary, do it later — just do not skip it forever.
 
 > **Whitelist beats banning.** A ban is for someone you let in and regret. A whitelist means you never had to.
 
@@ -37,7 +38,7 @@ An **operator** (or "op") can use cheat-level commands: change the weather, tele
 
 Give it to nobody at first, including yourself, unless you actually need it. It is easy to add and awkward to take back after somebody has filled the world with TNT.
 
-In the console:
+This is typed in the **Terminal** tab too:
 
 ```text
 op PlayerName
@@ -97,14 +98,7 @@ If you later want friendly names without port numbers, that is what DNS SRV reco
 
 Whoever is on your server is on your computer, in your world. It is entirely reasonable to say out loud what is and is not okay — griefing, stealing, who can use ops, who gets to invite people. Doing it early is easier than doing it after an argument.
 
-And if someone will not stop:
-
-```text
-kick PlayerName
-ban PlayerName
-```
-
-Or just take them off the whitelist. It is your server.
+And if someone will not stop, this one *does* have buttons: the **Player Management** tab has **Kick**, **Ban** and **Unban**. Or just take them off the whitelist, which is quieter and works just as well. It is your server.
 
 <div class="pager" markdown="1">
 

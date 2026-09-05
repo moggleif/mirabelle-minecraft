@@ -14,7 +14,9 @@ The real reason to back up is that it makes you brave. If you can undo anything 
 - try something you are honestly not sure about
 - delete a server or a world
 
-And set up a scheduled backup for any world you would be sad to lose. Crafty can run them for you on a timer. Do not rely on remembering.
+In Crafty that is the server's **Backup** tab: it makes one now, and it lists the ones you already have.
+
+And set up a scheduled backup for any world you would be sad to lose — the **Schedule** tab runs them on a timer, so you are not relying on remembering.
 
 ## Three layers, three different problems
 
@@ -45,10 +47,10 @@ Copy the backup folder somewhere else as well — another computer, a NAS, an ex
 ## Restoring one server
 
 1. Stop the server if it is still running.
-2. Pick a backup you trust — ideally from before whatever went wrong.
-3. Restore it in Crafty.
+2. Open its **Backup** tab and pick a backup you trust — ideally from before whatever went wrong.
+3. Restore it from that list.
 4. Start the server.
-5. Read the console for errors.
+5. Read the **Terminal** tab for errors.
 6. Join it and actually look around before telling everyone it is fixed.
 
 ## Rebuilding the whole host

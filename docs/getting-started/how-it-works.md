@@ -40,6 +40,8 @@ Instead of typing commands to create a server, edit config files by hand and rea
 
 Crafty is not made by this project. It has [its own documentation](https://docs.craftycontrol.com/), which is the right place to look for details about its features.
 
+A few Minecraft things — the whitelist, making someone an operator — have no buttons in Crafty, and are typed into its **Terminal** tab instead. That is a box on a web page that talks to the Minecraft server; it is not the computer's terminal and cannot hurt the machine. [Step 3](first-server.md#where-everything-is-in-crafty) maps out where everything lives.
+
 ## Your Minecraft servers
 
 Each server Crafty creates is a separate world with its own settings, its own players and its own address. You can have several. They only compete for the computer's memory when they are running at the same time.
