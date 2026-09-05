@@ -148,4 +148,4 @@ Verify all of the following:
 - documentation uses examples rather than private infrastructure details;
 - no Actions logs or artifacts contain sensitive data.
 
-See the repository [security policy](../../SECURITY.md) for handling security problems and accidentally committed secrets.
+See the repository [security policy](https://github.com/moggleif/mirabelle-minecraft/blob/main/SECURITY.md) for handling security problems and accidentally committed secrets.
