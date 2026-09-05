@@ -9,6 +9,7 @@
   --line: #e2e0d8;
   --accent: #2f7d4f;
   --accent-soft: #e7f3ec;
+  --on-accent: #ffffff;
   --shadow: 0 1px 2px rgba(20, 30, 25, 0.06), 0 6px 18px rgba(20, 30, 25, 0.05);
 }
 
@@ -22,6 +23,7 @@
     --line: #2e343a;
     --accent: #7fd6a2;
     --accent-soft: #1e2d25;
+    --on-accent: #10201a;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.25);
   }
 }
@@ -267,6 +269,51 @@ th {
 
 .cards li > a strong {
   font-weight: 700;
+}
+
+/* Big previous / next buttons at the foot of every page */
+
+.pager {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.pager ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.pager li {
+  margin: 0;
+}
+
+.pager li > a {
+  display: block;
+  padding: 1rem 1.15rem;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--bg-soft);
+  color: var(--text);
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: var(--shadow);
+}
+
+.pager li:last-child > a {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.pager li > a:hover {
+  filter: brightness(1.06);
 }
 
 /* Footer */

@@ -105,6 +105,9 @@ view-distance 10
 
 Adjust once you have watched it run with people on it. Guessing in advance is not worth the effort.
 
----
+<div class="pager" markdown="1">
 
-**See also:** [Host and Docker notes](../operations/deployment.md) for opening those ports on the network.
+- [← Step 3 — Your first server](../getting-started/first-server.md)
+- [Host and Docker notes →](../operations/deployment.md)
+
+</div>

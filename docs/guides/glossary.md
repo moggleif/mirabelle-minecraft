@@ -84,6 +84,9 @@ Every word on this site that might mean nothing to you yet, in plain language. S
 | **`.gitignore`** | The list of files Git should never pick up — like `.env`. |
 | **Secret** | A password, key or token. Never put one in Git, not even briefly. |
 
----
+<div class="pager" markdown="1">
 
-**Back to:** [Start here](../index.md)
+- [← When something breaks](troubleshooting.md)
+- [Back to Start here →](../index.md)
+
+</div>

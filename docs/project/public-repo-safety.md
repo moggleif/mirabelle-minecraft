@@ -152,6 +152,8 @@ Verify all of the following:
 
 See the repository [security policy](https://github.com/moggleif/mirabelle-minecraft/blob/main/SECURITY.md) for handling security problems and accidentally committed secrets.
 
----
+<div class="pager" markdown="1">
 
-**Back to:** [Start here](../index.md)
+- [Back to Start here →](../index.md)
+
+</div>

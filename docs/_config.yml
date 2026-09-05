@@ -17,6 +17,8 @@ nav:
     url: /getting-started/invite-friends.html
   - title: Help
     url: /guides/troubleshooting.html
+  - title: Words
+    url: /guides/glossary.html
 
 defaults:
   - scope:

@@ -17,7 +17,11 @@ When you create a server, Crafty asks a handful of questions. Here is what they 
 | Minimum memory | `1 GB` | How much memory the server takes right away. |
 | Maximum memory | `3 GB` | The most it is ever allowed to use. |
 
-More about memory and ports on [Memory, ports and extra servers](../guides/server-sizing.md).
+More about memory and ports on [Memory, ports and extra servers](../guides/server-sizing.md). If a word in that table means nothing to you, it is in the [word list](../guides/glossary.md).
+
+> **Crafty's screens change between versions**, so this guide describes what to look for rather than exact button names. If a label here does not match what you see, look for the nearest thing that means the same — and [Crafty's own documentation](https://docs.craftycontrol.com/) has the current screenshots.
+
+**To check which Minecraft version you play:** open the Minecraft launcher and look at the version shown next to the Play button, or under *Installations*. Pick that same version for the server. This is the single most common reason a friend cannot join later.
 
 Somewhere in the process you will have to accept Minecraft's **EULA** — the licence agreement from Mojang. Every Minecraft server has to. You cannot start a server without it.
 
@@ -35,6 +39,8 @@ In Minecraft: Java Edition, go to **Multiplayer** → **Add Server**.
 
 - Playing on the host itself: `localhost`
 - Playing on another computer at home: the host's address, for example `192.0.2.10`
+
+Do not know the host's address? Ask whoever set the computer up, or run `hostname -I` on it.
 
 If your server uses a port other than `25565`, put it after a colon: `192.0.2.10:25566`.
 
@@ -72,6 +78,9 @@ You have two options, and both are fine:
 - **A new world inside the same server** — same version, same settings, fresh terrain.
 - **A brand new server** — better when you want a different Minecraft version, a different server type, or a mod pack. Old servers can just sit there, stopped, costing you nothing but disk space.
 
----
+<div class="pager" markdown="1">
 
-**Next:** [Invite your friends](invite-friends.md)
+- [← Step 2 — Set up Crafty](start-crafty.md)
+- [Next: Step 4 — Invite your friends →](invite-friends.md)
+
+</div>

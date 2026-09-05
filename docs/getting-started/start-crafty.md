@@ -2,7 +2,19 @@
 
 This is the only part of the guide with real terminal work. Take it slowly, one command at a time, and read what comes back before typing the next one.
 
-> **First time in a terminal?** A terminal is a window where you type commands instead of clicking. You type one line, press Enter, and the computer answers. Nothing happens until you press Enter, so it is safe to read a command twice before you commit.
+> **Someone already installed Crafty for you?** Then you can skip this whole page for now. Read the short section directly below, then go to [Step 3](first-server.md). Come back here when you need to upgrade Crafty or set it up again on a new computer.
+
+## Opening Crafty when someone else set it up
+
+Three things, and you are in:
+
+1. **The address.** Crafty is a website running on the server computer, and you reach it over HTTPS on port `8443`. On the computer itself that is `https://localhost:8443`; from another computer at home it is that computer's address, like `https://192.0.2.10:8443`. Ask whoever set it up which one to use.
+2. **The warning.** Your browser will say the connection is not private. That is expected — see [why below](#6-open-crafty-in-your-browser). Click through it (usually *Advanced* → *Continue*).
+3. **The login.** Ask for your own Crafty account rather than borrowing someone else's. Whoever set it up can create one for you.
+
+That is everything you need to start [Step 3](first-server.md).
+
+The rest of this page is for installing Crafty from scratch.
 
 ## What the commands look like
 
@@ -13,6 +25,8 @@ whoami
 ```
 
 Type it (or copy it), press Enter, done. Some commands need administrator rights, and those start with `sudo`. That word means *do this as the computer's administrator* — the computer will ask for a password, and nothing will appear on screen while you type it. That is normal.
+
+> **First time in a terminal?** A terminal is a window where you type commands instead of clicking. You type one line, press Enter, and the computer answers. Nothing happens until you press Enter, so it is safe to read a command twice before you commit.
 
 ## 1. Copy the project onto the host
 
@@ -129,6 +143,9 @@ Crafty is running and it is yours. Nothing is playable yet — that is the next 
 
 If any of this went sideways, [When something breaks](../guides/troubleshooting.md) covers the usual failures.
 
----
+<div class="pager" markdown="1">
 
-**Next:** [Your first server](first-server.md)
+- [← Step 1 — How it works](how-it-works.md)
+- [Next: Step 3 — Your first server →](first-server.md)
+
+</div>

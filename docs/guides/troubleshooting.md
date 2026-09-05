@@ -2,6 +2,18 @@
 
 Something will break. That is not a sign you did it wrong — it is the normal state of running a server. Almost everything on this page is a five-minute fix.
 
+**Jump to your problem:**
+
+- [The Crafty website will not open](#the-crafty-website-will-not-open)
+- [The browser says the connection is not private](#the-browser-says-the-connection-is-not-private)
+- [I lost the Crafty password](#i-lost-the-crafty-password)
+- [A Minecraft server will not start](#a-minecraft-server-will-not-start)
+- [A friend cannot join](#a-friend-cannot-join)
+- [Everything is laggy](#everything-is-laggy)
+- [Permission denied about the data folder](#permission-denied-about-the-data-folder)
+- [Crafty keeps restarting on its own](#crafty-keeps-restarting-on-its-own)
+- [Nothing here helps](#nothing-here-helps)
+
 ## How to look at an error
 
 Two habits will solve most problems on their own:
@@ -134,6 +146,9 @@ Crafty questions belong with [Crafty's own project](https://docs.craftycontrol.c
 
 > **Before you paste logs anywhere public,** skim them for your home IP address, hostnames, usernames or anything that looks like a password. Swap those for `example` values.
 
----
+<div class="pager" markdown="1">
 
-**See also:** [Word list](glossary.md) for any term on this page that meant nothing to you.
+- [← Step 5 — Keep it safe](../operations/backup-recovery.md)
+- [Word list: what the words mean →](glossary.md)
+
+</div>

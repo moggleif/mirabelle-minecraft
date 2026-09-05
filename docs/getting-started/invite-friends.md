@@ -6,26 +6,28 @@ A server with nobody on it is just a very slow single-player world. This page is
 
 A **whitelist** is a guest list. If your name is on it you can join; if it is not, the server turns you away without you having to ban anyone.
 
-Turn it on *before* anyone else gets the address. It is set per server, not once for all of Crafty. In that server's `server.properties`:
+Turn it on *before* anyone else gets the address. It is set per server, not once for all of Crafty.
 
-```properties
-white-list=true
-enforce-whitelist=true
-```
-
-The second line matters: it kicks out anyone already online who is not on the list, instead of only checking at the door.
-
-Then add people. In Crafty's player screens, or by typing this in the server console:
+The quickest way is the server console in Crafty. With the server running, type:
 
 ```text
+whitelist on
 whitelist add PlayerName
 ```
 
-Use their exact Minecraft username. To remove someone:
+Use their exact Minecraft username — spelling matters. To remove someone:
 
 ```text
 whitelist remove PlayerName
 ```
+
+Then add one more setting in that server's `server.properties`, which you can edit from Crafty:
+
+```properties
+enforce-whitelist=true
+```
+
+That one kicks out anyone already online who is not on the list, instead of only checking at the door. It takes effect after a restart.
 
 > **Whitelist beats banning.** A ban is for someone you let in and regret. A whitelist means you never had to.
 
@@ -53,6 +55,22 @@ Crafty accounts are a separate thing entirely. A Crafty login can create and del
 > **Ask the person who owns the router before you open anything.** Show them this page. Opening a port means anyone on the internet can knock on that door, and you want an adult to know that door exists.
 
 If you do open it, open only the Minecraft port range, and only that. The details are on [Host and Docker notes](../operations/deployment.md).
+
+### What to send your friends
+
+Something like this, with your real details filled in:
+
+```text
+Server address: minecraft.example.net
+Minecraft version: Java Edition 1.21.x
+
+Tell me your exact Minecraft username first so I can add you
+to the whitelist, or the server will not let you in.
+
+In Minecraft: Multiplayer -> Add Server -> paste the address.
+```
+
+Send it in a private message to the people you actually want on the server. An address posted in a public chat, a stream or a comment section is an address you no longer control who has.
 
 Two rules that are not optional:
 
@@ -88,6 +106,9 @@ ban PlayerName
 
 Or just take them off the whitelist. It is your server.
 
----
+<div class="pager" markdown="1">
 
-**Next:** [Keep it safe](../operations/backup-recovery.md)
+- [← Step 3 — Your first server](first-server.md)
+- [Next: Step 5 — Keep it safe →](../operations/backup-recovery.md)
+
+</div>

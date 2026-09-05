@@ -133,6 +133,9 @@ A reverse proxy is a convenience, not a protection. Keep the firewall or VPN rul
 - Check containers came back healthy after a reboot
 - Read Crafty's release notes before upgrading
 
----
+<div class="pager" markdown="1">
 
-**See also:** [Keep it safe](backup-recovery.md) for the backup and rebuild procedures.
+- [← Memory, ports and extra servers](../guides/server-sizing.md)
+- [Keep it safe: backups and rebuilding →](backup-recovery.md)
+
+</div>
