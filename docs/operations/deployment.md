@@ -1,14 +1,12 @@
-# Deployment and host operations
+# Host and Docker notes
 
-This document is for the person responsible for the Linux host, Docker, networking and Crafty itself.
+This page is the reference for looking after the machine, rather than the Minecraft servers on it. Setting Crafty up for the first time is [Step 2](../getting-started/start-crafty.md); this is everything that comes after.
 
-Minecraft administration should normally happen in Crafty instead. See [Crafty user guide](../getting-started/crafty.md).
+Day to day you should not need this page. Reach for it when you are upgrading, changing the network, or something on the host needs attention.
 
-## Repository vs runtime data
+## Two kinds of files, kept apart
 
-Keep the Git repository and Crafty runtime data separate.
-
-Repository:
+The project folder holds the recipe:
 
 ```text
 .
@@ -19,7 +17,7 @@ Repository:
 └── docs/
 ```
 
-Runtime data:
+The data folder holds everything real:
 
 ```text
 crafty-data/
@@ -30,103 +28,75 @@ crafty-data/
 └── servers/
 ```
 
-Do not commit runtime data to Git.
+The data folder lives outside the project folder and never goes into Git. That separation is the reason you can rebuild this setup on a new machine in ten minutes.
 
-## Initial deployment
+## Commands worth knowing
 
-Clone the repository:
+Run all of these from inside the project folder.
 
-```bash
-git clone <repository-url>
-cd <repository-directory>
-```
+| Command | What it does |
+| --- | --- |
+| `docker compose ps` | Is Crafty running? |
+| `docker compose logs --tail=100` | The last 100 lines of Crafty's output |
+| `docker compose logs -f` | Follow the output live (`Ctrl+C` to stop watching) |
+| `docker compose restart` | Restart Crafty |
+| `docker compose up -d` | Start it |
+| `docker compose down` | Stop and remove the container |
+| `docker compose config` | Check the recipe without changing anything |
+| `df -h` | How much disk space is left |
 
-Create the local environment file:
+`docker compose down` sounds alarming and is not. It removes the container, not your data — worlds and backups live in the data folder on the host. Even so, do not do it while people are playing.
 
-```bash
-cp .env.example .env
-```
+## Pin the Crafty version
 
-Edit `.env` for the host. It is intentionally excluded from Git.
-
-Create the persistent runtime directories at the path selected in `.env`.
-
-Then validate Compose:
-
-```bash
-docker compose config
-```
-
-Pull and start Crafty:
-
-```bash
-docker compose pull
-docker compose up -d
-```
-
-Inspect status and logs:
-
-```bash
-docker compose ps
-docker compose logs --tail=100
-```
-
-## Version pinning
-
-The Compose file should use a specific Crafty release rather than an automatically moving tag.
-
-Example:
+`compose.yaml` names an exact Crafty release rather than a tag that quietly moves:
 
 ```yaml
 image: registry.gitlab.com/crafty-controller/crafty-4:4.x.y
 ```
 
-This keeps deployments reproducible and makes upgrades visible in Git history.
+That way upgrades happen when you decide, they show up as a visible change in Git, and if a new version misbehaves you know exactly what changed.
 
 ## Upgrading Crafty
 
-A deliberate upgrade flow is preferred:
+Do it deliberately, not automatically:
 
-1. Read the release notes.
-2. Verify that important Minecraft data is backed up.
-3. Optionally take a VM or host snapshot.
-4. Change the Crafty image version in `compose.yaml`.
-5. Run `docker compose pull`.
-6. Run `docker compose up -d`.
-7. Verify Crafty login, server list and one Minecraft server.
+1. Read Crafty's release notes.
+2. Check that your Minecraft data is backed up.
+3. Take a snapshot of the machine if you can.
+4. Change the version in `compose.yaml`.
+5. `docker compose pull`
+6. `docker compose up -d`
+7. Log in, check the server list, start one server.
 8. Commit the version change to Git.
 
-Avoid unattended container upgrades for this type of stateful service.
+Avoid tools that update this container on their own. It holds state you care about.
 
-## Networking model
+## Networking
 
-Treat the Crafty web interface and Minecraft game traffic as separate services.
-
-A sensible pattern is:
+Treat the Crafty web interface and Minecraft game traffic as two completely different things:
 
 ```text
 Crafty web UI
-    -> private LAN/VPN access
-    -> optional reverse proxy with HTTPS
+    -> home network or VPN only
+    -> optionally behind a reverse proxy with HTTPS
 
 Minecraft game ports
-    -> selectively exposed to the Internet
-    -> forwarded directly to the Minecraft host
+    -> may be opened to the internet on purpose
+    -> forwarded to the host
 ```
 
-The Crafty administrative interface does not need to be publicly reachable just because players need public Minecraft access.
+Players needing to reach Minecraft is not a reason to expose Crafty. Crafty can delete every world you have; the game port cannot.
 
-## Minecraft Java port range
+### The Minecraft port range
 
-`compose.yaml` publishes a small configurable Java port range. The default is defined in `.env.example`:
+`compose.yaml` publishes the range set in `.env`:
 
 ```text
 MC_JAVA_PORT_RANGE=25565-25575
 ```
 
-Each simultaneously running Crafty server gets one unique port inside that range.
-
-If users should be able to create several public Minecraft servers without requiring a router change every time, forward the same small range 1:1 to the host, for example:
+If servers should be reachable from the internet, forward that same range to the host, one-to-one:
 
 ```text
 WAN TCP 25565-25575
@@ -134,77 +104,35 @@ WAN TCP 25565-25575
 host TCP 25565-25575
 ```
 
-Choose a range appropriate to the installation. Do not expose a much larger range merely for convenience.
+Keep the range small. Do not forward a wide range for convenience — you would be opening doors to rooms you have not built yet.
 
-Minecraft Bedrock is **not** published by the default Compose configuration. If Bedrock is actually required, add its UDP port deliberately and document the change rather than exposing unused services by default.
+Minecraft Bedrock is **not** published by default. If you genuinely need it, add its UDP port on purpose and write down that you did.
 
-## Crafty HTTPS port
+### Crafty's web port
 
-Crafty's HTTPS host port is configurable through:
+Set through `.env`:
 
 ```text
 CRAFTY_HTTPS_PORT=8443
 ```
 
-Publishing a Docker port makes it reachable on host interfaces unless additional network controls restrict it. Protect Crafty's administrative interface with the host firewall, LAN/VPN policy, reverse-proxy ACLs, or equivalent controls.
+Publishing a port in Docker makes it reachable on the host's network interfaces unless something else stops it. Restricting it is your job: host firewall, LAN or VPN policy, or a reverse proxy with access rules.
 
-## Reverse proxy
+### Reverse proxy
 
-A reverse proxy can provide a normal HTTPS hostname for Crafty while the container continues to listen on its internal HTTPS port.
+A reverse proxy gives Crafty a proper hostname and a trusted certificate, so the browser stops warning you. It must forward WebSocket traffic for Crafty's live console to work.
 
-The proxy should forward WebSocket traffic correctly where required and use a trusted TLS certificate.
+A reverse proxy is a convenience, not a protection. Keep the firewall or VPN rules regardless.
 
-For a private administration service, access restrictions should normally be enforced at the proxy, firewall or VPN layer.
+## Routine maintenance
 
-## Host maintenance
+- Linux security updates
+- Docker Engine updates
+- Watch free disk space — worlds, backups and logs only grow
+- Check that backups are actually happening, and restore one occasionally
+- Check containers came back healthy after a reboot
+- Read Crafty's release notes before upgrading
 
-Routine host maintenance includes:
+---
 
-- Linux security updates;
-- Docker Engine updates;
-- monitoring free disk space;
-- verifying backups;
-- checking container health after restarts;
-- reviewing Crafty releases before upgrades.
-
-Minecraft worlds and server settings remain Crafty-level concerns unless recovery is required.
-
-## Useful commands
-
-Status:
-
-```bash
-docker compose ps
-```
-
-Recent logs:
-
-```bash
-docker compose logs --tail=100
-```
-
-Follow logs:
-
-```bash
-docker compose logs -f
-```
-
-Restart Crafty container:
-
-```bash
-docker compose restart
-```
-
-Stop the deployment:
-
-```bash
-docker compose down
-```
-
-Start it again:
-
-```bash
-docker compose up -d
-```
-
-Removing the container does not remove bind-mounted Crafty runtime data, but backups should still exist before destructive maintenance.
+**See also:** [Keep it safe](backup-recovery.md) for the backup and rebuild procedures.
