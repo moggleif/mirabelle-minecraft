@@ -1,0 +1,109 @@
+name: Quality
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  markdown:
+    name: Markdown lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        with:
+          node-version: "24"
+
+      - name: Run markdownlint
+        run: npx --yes markdownlint-cli2@0.23.2
+
+  yaml:
+    name: YAML lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+
+      - name: Install yamllint
+        run: python3 -m pip install --disable-pip-version-check yamllint==1.38.0
+
+      - name: Run yamllint
+        run: yamllint .
+
+  workflows:
+    name: Workflow lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+
+      - name: Run actionlint
+        run: go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
+
+  compose:
+    name: Compose validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+
+      - name: Validate Docker Compose configuration
+        run: |
+          cp .env.example .env
+          docker compose config --quiet
+
+  documentation-links:
+    name: Documentation links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+
+      - name: Validate local Markdown links
+        shell: python
+        run: |
+          import re
+          import sys
+          from pathlib import Path
+          from urllib.parse import unquote
+
+          root = Path.cwd().resolve()
+          pattern = re.compile(r"(?<!!)\[[^\]]+\]\(([^)]+)\)")
+          failures = []
+
+          for document in root.rglob("*.md"):
+              if any(part in {".git", "node_modules"} for part in document.parts):
+                  continue
+
+              text = document.read_text(encoding="utf-8")
+              for match in pattern.finditer(text):
+                  target = match.group(1).strip()
+                  if target.startswith("<") and target.endswith(">"):
+                      target = target[1:-1]
+                  if target.startswith(("http://", "https://", "mailto:", "#")):
+                      continue
+
+                  target = target.split("#", 1)[0].split("?", 1)[0]
+                  if not target:
+                      continue
+
+                  resolved = (document.parent / unquote(target)).resolve()
+                  if resolved != root and root not in resolved.parents:
+                      failures.append(f"{document.relative_to(root)}: link escapes repository: {target}")
+                  elif not resolved.exists():
+                      failures.append(f"{document.relative_to(root)}: missing target: {target}")
+
+          if failures:
+              print("\n".join(failures))
+              sys.exit(1)
