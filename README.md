@@ -19,16 +19,21 @@ The documentation is published with GitHub Pages from `/docs`:
 
 **[Open the documentation site](https://moggleif.github.io/mirabelle-minecraft/)**
 
-Or jump directly to the guide that matches what you are doing:
+The site is written for someone setting up a server for the first time. It walks through the whole thing in five steps.
 
 | Guide | Use it for |
 | --- | --- |
-| [Crafty user guide](docs/getting-started/crafty.md) | Creating servers, whitelist, players, worlds and everyday Minecraft administration |
-| [Server sizing and ports](docs/guides/server-sizing.md) | Memory limits, multiple servers and port allocation |
-| [Deployment and host operations](docs/operations/deployment.md) | Docker, `.env`, networking, reverse proxy and Crafty upgrades |
-| [Backup and recovery](docs/operations/backup-recovery.md) | World backups, off-host protection and rebuilding a host |
-| [Public repository safety](docs/project/public-repo-safety.md) | Secret hygiene, privacy, Git history and checks before publishing the repository |
-| [Security policy](SECURITY.md) | Reporting security problems and handling accidentally committed secrets |
+| [How it works](docs/getting-started/how-it-works.md) | The pieces — host, Docker, Crafty, Minecraft servers — and who does what |
+| [Set up Crafty](docs/getting-started/start-crafty.md) | Clone, `.env`, `docker compose up`, first login |
+| [Your first server](docs/getting-started/first-server.md) | Creating a Minecraft server, starting it, joining it |
+| [Invite your friends](docs/getting-started/invite-friends.md) | Whitelist, operators, addresses, what not to expose |
+| [Keep it safe](docs/operations/backup-recovery.md) | Backups, off-host copies, restoring a server or a whole host |
+| [When something breaks](docs/guides/troubleshooting.md) | The usual failures and their fixes |
+| [Memory, ports and extra servers](docs/guides/server-sizing.md) | Memory limits, port allocation, running several servers |
+| [Word list](docs/guides/glossary.md) | Plain-language definitions of every term used |
+| [Host and Docker notes](docs/operations/deployment.md) | Upgrades, networking, reverse proxy, maintenance commands |
+| [Public repository safety](docs/project/public-repo-safety.md) | Secret hygiene, privacy, checks before publishing the repository |
+| [Security policy](SECURITY.md) | Reporting security problems and handling committed secrets |
 
 ## Why Crafty?
 
@@ -66,11 +71,19 @@ The two roles may of course be held by the same person.
 │   └── workflows/
 └── docs/
     ├── index.md
+    ├── 404.md
     ├── _config.yml
+    ├── _layouts/
+    ├── assets/
     ├── getting-started/
-    │   └── crafty.md
+    │   ├── how-it-works.md
+    │   ├── start-crafty.md
+    │   ├── first-server.md
+    │   └── invite-friends.md
     ├── guides/
-    │   └── server-sizing.md
+    │   ├── server-sizing.md
+    │   ├── troubleshooting.md
+    │   └── glossary.md
     ├── operations/
     │   ├── deployment.md
     │   └── backup-recovery.md
@@ -129,7 +142,7 @@ docker compose ps
 docker compose logs --tail=100
 ```
 
-Detailed deployment instructions are in [Deployment and host operations](docs/operations/deployment.md).
+Step-by-step instructions, written for a first-timer, are in [Set up Crafty](docs/getting-started/start-crafty.md).
 
 ## Design principles
 

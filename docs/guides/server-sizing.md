@@ -1,47 +1,53 @@
-# Server sizing and ports
+# Memory, ports and extra servers
 
-This document gives practical defaults for small single-host Crafty installations.
+Two numbers confuse everyone at the start: how much memory to give a server, and which port to put it on. Here are answers you can just use.
 
-The exact limits depend on the host, but the goal is to avoid giving every Minecraft server more resources than it can actually use.
+## Memory: what to type
 
-## Memory defaults
-
-For a normal Paper server with a few players:
+For a normal Paper server with a few friends on it:
 
 ```text
 Minimum memory: 1 GB
 Maximum memory: 3 GB
 ```
 
-This is a good baseline for ordinary survival, creative play and light plugins.
-
-For a somewhat heavier server:
+For something heavier — a mod pack, lots of plugins, a bigger group:
 
 ```text
 Minimum memory: 2 GB
 Maximum memory: 4 GB
 ```
 
-Use the larger values when there is an actual need, such as heavier plugins, larger view distances or a more demanding server setup.
+Start with the first one. Move up only when you have an actual reason.
 
-## Why minimum and maximum are different
+## Why there are two numbers
 
-The Java process can start with a smaller heap and grow when needed.
-
-Conceptually:
+**Minimum** is how much memory the server grabs when it starts. **Maximum** is the ceiling it is never allowed to cross.
 
 ```text
-Minimum = starting / lower memory target
-Maximum = upper limit the server may use
+Minimum = what it takes straight away
+Maximum = the most it may ever take
 ```
 
-For small servers, setting both values very high usually gives little benefit.
+Setting both to something huge does not make Minecraft faster. It just means the server can eat memory the rest of the computer needs.
 
-## Multiple servers
+## More memory is usually the wrong fix
 
-Several servers may exist in Crafty even if the host cannot run all of them at full load simultaneously.
+If your server is laggy, memory is rarely the cause. Minecraft mostly struggles with *work*, not space:
 
-For example, on a small host it may be perfectly reasonable to have:
+- generating new terrain when someone explores fast
+- a high view distance or simulation distance
+- thousands of mobs, items or hoppers
+- expensive plugins or a big mod pack
+- several servers running at once on one machine
+
+Lower the view distance first. It costs you almost nothing and helps more than a memory bump.
+
+## Running more than one server
+
+You can create as many servers in Crafty as you like. What matters is how many run **at the same time**, because only running servers use memory.
+
+So this is perfectly reasonable on a small machine:
 
 ```text
 Survival   max 3 GB
@@ -49,32 +55,13 @@ Creative   max 3 GB
 Testing    max 2 GB
 ```
 
-if only one or two are normally running at once.
+as long as you only ever have one or two of them started.
 
-The important limit is the **combined memory usage of servers that are actually running**, plus memory needed by Linux, Docker and Crafty.
+Leave clear headroom for Linux, Docker and Crafty themselves. Handing almost all the machine's memory to Minecraft is how you get a host that freezes instead of a server that runs fast.
 
-A useful rule is to leave clear headroom for the host operating system rather than allocating nearly all physical RAM to Minecraft heaps.
+## Ports: one door each
 
-## CPU matters too
-
-Minecraft server performance is often limited by CPU work rather than memory alone.
-
-Common causes of lag include:
-
-- generating new chunks;
-- high view or simulation distance;
-- many entities;
-- expensive plugins;
-- heavy modpacks;
-- several busy servers running at once.
-
-If a server lags, increasing RAM should not be the first automatic response.
-
-## Port allocation
-
-Each server that runs at the same time needs a unique listening port.
-
-A simple convention is:
+Every server that runs at the same time needs its own port. Count upwards:
 
 ```text
 25565  first server
@@ -83,42 +70,41 @@ A simple convention is:
 25568  fourth server
 ```
 
-The infrastructure administrator should reserve a specific range and expose only that range through the firewall/router when public access is required.
-
-For example:
-
-```text
-25565-25575
-```
-
-would provide eleven possible Java server ports.
-
-## Public addresses
-
-The server using Java's default port `25565` can normally be entered as:
+`25565` is Minecraft's standard port, so the server sitting on it can be reached without typing a port at all:
 
 ```text
 minecraft.example.net
 ```
 
-A server on another port is normally entered as:
+Anything else needs the port spelled out:
 
 ```text
 minecraft.example.net:25566
 ```
 
-If separate friendly hostnames are desired, DNS SRV records can map names to different ports later.
+This project reserves a small range in `.env`:
 
-## Practical recommendation
+```text
+MC_JAVA_PORT_RANGE=25565-25575
+```
 
-For a small family or friends server, start modestly:
+That is eleven possible servers, which is plenty. Stay inside the range when you create servers, and do not widen it just in case — every open port is another door to look after.
+
+## A good starting point
+
+If you want one set of settings to copy for your first real server:
 
 ```text
 Paper
 1 GB minimum
 3 GB maximum
-one unique port
-whitelist enabled
+port 25565
+whitelist on
+view-distance 10
 ```
 
-Increase resources only when observed load or server behaviour justifies it.
+Adjust once you have watched it run with people on it. Guessing in advance is not worth the effort.
+
+---
+
+**See also:** [Host and Docker notes](../operations/deployment.md) for opening those ports on the network.

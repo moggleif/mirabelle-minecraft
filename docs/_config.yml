@@ -1,6 +1,25 @@
-title: Minecraft Server with Crafty Controller
-description: Documentation for a small, understandable Crafty Controller and Minecraft server setup.
-theme: minima
-markdown: kramdown
+title: Minecraft server with Crafty
+description: A beginner-friendly guide to running your own Minecraft server with Crafty Controller.
 url: https://moggleif.github.io
 baseurl: /mirabelle-minecraft
+markdown: kramdown
+
+nav:
+  - title: Start here
+    url: /
+  - title: How it works
+    url: /getting-started/how-it-works.html
+  - title: Set up Crafty
+    url: /getting-started/start-crafty.html
+  - title: First server
+    url: /getting-started/first-server.html
+  - title: Invite friends
+    url: /getting-started/invite-friends.html
+  - title: Help
+    url: /guides/troubleshooting.html
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default

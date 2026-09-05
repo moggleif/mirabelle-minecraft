@@ -1,8 +1,10 @@
 # Public repository safety
 
-This project is intended to be reusable and can be published, but changing a Git repository from private to public publishes more than the files visible on the current branch. **Git history, commit metadata, branches, tags, issues, Actions logs and other repository metadata may also become visible.**
+This page is for whoever maintains the project's code, rather than for running Minecraft. Read it before making this repository public, or before pushing changes to it once it already is.
 
-Use this checklist before changing repository visibility or when reviewing changes to a public repository.
+Making a repository public shares more than the files you can see right now. **Git history, commit metadata, branches, tags, issues, Actions logs and other repository metadata become visible too.** A password deleted last week is still sitting in last month's commit.
+
+> **The short version:** never commit `.env`, passwords, keys, or anything that describes your actual home network. Use example values like `minecraft.example.net` and `192.0.2.10` in documentation.
 
 ## 1. Keep deployment-specific information local
 
@@ -149,3 +151,7 @@ Verify all of the following:
 - no Actions logs or artifacts contain sensitive data.
 
 See the repository [security policy](https://github.com/moggleif/mirabelle-minecraft/blob/main/SECURITY.md) for handling security problems and accidentally committed secrets.
+
+---
+
+**Back to:** [Start here](../index.md)
