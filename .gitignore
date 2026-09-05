@@ -1,0 +1,40 @@
+# Local environment / host-specific configuration
+.env
+.env.*
+!.env.example
+.envrc
+docker-compose.override.yml
+compose.override.yaml
+
+# Crafty / Minecraft runtime data
+crafty-data/
+backups/
+config/
+import/
+logs/
+servers/
+*.log
+
+# Credentials, keys and certificates
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.kdbx
+.ssh/
+id_rsa
+id_ed25519
+credentials*
+secrets*
+default-creds.txt
+
+# Temporary/editor files
+*.swp
+*.swo
+*.bak
+*~
+.DS_Store
+.idea/
+.vscode/

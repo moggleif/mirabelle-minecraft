@@ -1,0 +1,24 @@
+services:
+  crafty:
+    image: registry.gitlab.com/crafty-controller/crafty-4:4.10.8
+    restart: unless-stopped
+
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+
+    ports:
+      # Crafty web UI (HTTPS). Keep this private with host firewall,
+      # reverse-proxy ACLs, LAN/VPN rules, or equivalent controls.
+      - "${CRAFTY_HTTPS_PORT:-8443}:8443"
+
+      # Minecraft Java ports managed by Crafty. Keep the range small and
+      # expose/forward only the ports that players actually need.
+      - "${MC_JAVA_PORT_RANGE:-25565-25575}:${MC_JAVA_PORT_RANGE:-25565-25575}"
+
+    volumes:
+      # Keep all runtime data outside the Git working tree.
+      - "${CRAFTY_DATA_DIR:?Set CRAFTY_DATA_DIR in .env}/backups:/crafty/backups"
+      - "${CRAFTY_DATA_DIR:?Set CRAFTY_DATA_DIR in .env}/logs:/crafty/logs"
+      - "${CRAFTY_DATA_DIR:?Set CRAFTY_DATA_DIR in .env}/servers:/crafty/servers"
+      - "${CRAFTY_DATA_DIR:?Set CRAFTY_DATA_DIR in .env}/config:/crafty/app/config"
+      - "${CRAFTY_DATA_DIR:?Set CRAFTY_DATA_DIR in .env}/import:/crafty/import"
