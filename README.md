@@ -15,15 +15,19 @@ Minecraft administration happens in Crafty. Linux, Docker, networking and backup
 
 ## Documentation
 
-Start with the guide that matches what you are doing:
+The documentation is published with GitHub Pages from `/docs`:
+
+**[Open the documentation site](https://moggleif.github.io/mirabelle-minecraft/)**
+
+Or jump directly to the guide that matches what you are doing:
 
 | Guide | Use it for |
 | --- | --- |
-| [Crafty user guide](docs/CRAFTY-GUIDE.md) | Creating servers, whitelist, players, worlds and everyday Minecraft administration |
-| [Server sizing and ports](docs/SERVER-SIZING.md) | Memory limits, multiple servers and port allocation |
-| [Deployment and host operations](docs/DEPLOYMENT-OPERATIONS.md) | Docker, `.env`, networking, reverse proxy and Crafty upgrades |
-| [Backup and recovery](docs/BACKUP-RECOVERY.md) | World backups, off-host protection and rebuilding a host |
-| [Public repository safety](docs/PUBLIC-REPO-SAFETY.md) | Secret hygiene, privacy, Git history and checks before publishing the repository |
+| [Crafty user guide](docs/getting-started/crafty.md) | Creating servers, whitelist, players, worlds and everyday Minecraft administration |
+| [Server sizing and ports](docs/guides/server-sizing.md) | Memory limits, multiple servers and port allocation |
+| [Deployment and host operations](docs/operations/deployment.md) | Docker, `.env`, networking, reverse proxy and Crafty upgrades |
+| [Backup and recovery](docs/operations/backup-recovery.md) | World backups, off-host protection and rebuilding a host |
+| [Public repository safety](docs/project/public-repo-safety.md) | Secret hygiene, privacy, Git history and checks before publishing the repository |
 | [Security policy](SECURITY.md) | Reporting security problems and handling accidentally committed secrets |
 
 ## Why Crafty?
@@ -56,14 +60,22 @@ The two roles may of course be held by the same person.
 ├── README.md
 ├── SECURITY.md
 ├── .github/
+│   ├── dependabot.yml
+│   ├── pull_request_template.md
+│   ├── rulesets/
 │   └── workflows/
-│       └── secret-scan.yml
 └── docs/
-    ├── CRAFTY-GUIDE.md
-    ├── SERVER-SIZING.md
-    ├── DEPLOYMENT-OPERATIONS.md
-    ├── BACKUP-RECOVERY.md
-    └── PUBLIC-REPO-SAFETY.md
+    ├── index.md
+    ├── _config.yml
+    ├── getting-started/
+    │   └── crafty.md
+    ├── guides/
+    │   └── server-sizing.md
+    ├── operations/
+    │   ├── deployment.md
+    │   └── backup-recovery.md
+    └── project/
+        └── public-repo-safety.md
 ```
 
 The repository intentionally does **not** contain Minecraft worlds or Crafty runtime data.
@@ -117,7 +129,7 @@ docker compose ps
 docker compose logs --tail=100
 ```
 
-Detailed deployment instructions are in [DEPLOYMENT-OPERATIONS.md](docs/DEPLOYMENT-OPERATIONS.md).
+Detailed deployment instructions are in [Deployment and host operations](docs/operations/deployment.md).
 
 ## Design principles
 
@@ -143,7 +155,7 @@ Git protects the deployment definition. Crafty backups protect individual worlds
 
 ### Treat a public repository as public history
 
-Removing a secret from the current branch does not remove it from old commits. This repository runs a full-history Gitleaks scan on pushes and pull requests, and [PUBLIC-REPO-SAFETY.md](docs/PUBLIC-REPO-SAFETY.md) contains a checklist to follow before changing visibility to public.
+Removing a secret from the current branch does not remove it from old commits. This repository runs a full-history Gitleaks scan on pushes and pull requests, and [Public repository safety](docs/project/public-repo-safety.md) contains a checklist for public repository changes.
 
 ## Scope
 
