@@ -1,64 +1,124 @@
 # Server sizing and ports
 
-Minecraft server memory should be sized for the workload rather than simply given as much RAM as possible.
+This document gives practical defaults for small single-host Crafty installations.
 
-## Practical starting point
+The exact limits depend on the host, but the goal is to avoid giving every Minecraft server more resources than it can actually use.
 
-For a small Paper server with a few players, start conservatively:
+## Memory defaults
 
-- minimum memory: 1 GB
-- maximum memory: 3 GB
+For a normal Paper server with a few players:
 
-For a somewhat heavier plugin setup, 2 GB minimum and 4 GB maximum can be reasonable if the host has enough memory.
+```text
+Minimum memory: 1 GB
+Maximum memory: 3 GB
+```
 
-More RAM does not automatically make Minecraft faster. CPU performance, chunk generation, view distance, plugins and mods can matter more.
+This is a good baseline for ordinary survival, creative play and light plugins.
+
+For a somewhat heavier server:
+
+```text
+Minimum memory: 2 GB
+Maximum memory: 4 GB
+```
+
+Use the larger values when there is an actual need, such as heavier plugins, larger view distances or a more demanding server setup.
+
+## Why minimum and maximum are different
+
+The Java process can start with a smaller heap and grow when needed.
+
+Conceptually:
+
+```text
+Minimum = starting / lower memory target
+Maximum = upper limit the server may use
+```
+
+For small servers, setting both values very high usually gives little benefit.
 
 ## Multiple servers
 
-Several servers may be configured in Crafty, but the host needs enough memory for the servers that are actually running at the same time plus Docker, Crafty and the operating system.
+Several servers may exist in Crafty even if the host cannot run all of them at full load simultaneously.
 
-Do not allocate the entire host's RAM to Minecraft JVM maximum values.
-
-If servers are normally used one at a time, each can have a useful maximum without all of those maxima needing to fit simultaneously. If several are intended to run together, size them as a group.
-
-## Minimum versus maximum memory
-
-The minimum value is roughly the memory Java starts with or reserves as its initial heap target. The maximum is the upper limit the Minecraft JVM may grow to.
-
-A useful default for a small server is therefore:
+For example, on a small host it may be perfectly reasonable to have:
 
 ```text
-Minimum: 1 GB
-Maximum: 3 GB
+Survival   max 3 GB
+Creative   max 3 GB
+Testing    max 2 GB
 ```
 
-Change it only when the server workload gives you a reason to do so.
+if only one or two are normally running at once.
 
-## Ports
+The important limit is the **combined memory usage of servers that are actually running**, plus memory needed by Linux, Docker and Crafty.
 
-Every simultaneously running Minecraft server on the same host needs its own listening port.
+A useful rule is to leave clear headroom for the host operating system rather than allocating nearly all physical RAM to Minecraft heaps.
 
-A simple allocation is:
+## CPU matters too
+
+Minecraft server performance is often limited by CPU work rather than memory alone.
+
+Common causes of lag include:
+
+- generating new chunks;
+- high view or simulation distance;
+- many entities;
+- expensive plugins;
+- heavy modpacks;
+- several busy servers running at once.
+
+If a server lags, increasing RAM should not be the first automatic response.
+
+## Port allocation
+
+Each server that runs at the same time needs a unique listening port.
+
+A simple convention is:
 
 ```text
-first server   25565
-second server  25566
-third server   25567
-...
+25565  first server
+25566  second server
+25567  third server
+25568  fourth server
 ```
 
-Keep the externally exposed range small. The Compose deployment uses a configurable Java range so the administrator can decide how many ports are available.
+The infrastructure administrator should reserve a specific range and expose only that range through the firewall/router when public access is required.
 
-The default Minecraft Java port is 25565. Players can connect to the default port using only the hostname; servers on another port normally require `hostname:port` unless DNS SRV records are configured.
+For example:
 
-## Choosing server software
+```text
+25565-25575
+```
 
-Paper is a good first choice for a server that should feel close to vanilla Minecraft while allowing performance improvements and plugins.
+would provide eleven possible Java server ports.
 
-Different server types and modpacks can have very different memory and CPU requirements, so treat the values above as starting points rather than guarantees.
+## Public addresses
 
-## When to increase memory
+The server using Java's default port `25565` can normally be entered as:
 
-Consider increasing the maximum only when you have evidence that the server is memory constrained, for example sustained heap pressure or workload requirements from a known modpack/plugin set.
+```text
+minecraft.example.net
+```
 
-Do not use extra RAM as the first response to every performance problem. Check CPU load, server timings, chunk generation and plugin behaviour as well.
+A server on another port is normally entered as:
+
+```text
+minecraft.example.net:25566
+```
+
+If separate friendly hostnames are desired, DNS SRV records can map names to different ports later.
+
+## Practical recommendation
+
+For a small family or friends server, start modestly:
+
+```text
+Paper
+1 GB minimum
+3 GB maximum
+one unique port
+whitelist enabled
+```
+
+Increase resources only when observed load or server behaviour justifies it.
