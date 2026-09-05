@@ -32,4 +32,4 @@ The repository is designed around these rules:
 - image upgrades are deliberate and version-pinned;
 - automated secret scanning runs on pushes and pull requests.
 
-See [docs/PUBLIC-REPO-SAFETY.md](docs/PUBLIC-REPO-SAFETY.md) before changing repository visibility to public.
+See [Public repository safety](docs/project/public-repo-safety.md) for the repository's public-source hygiene and review checklist.
