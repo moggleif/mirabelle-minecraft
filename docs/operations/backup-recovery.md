@@ -1,87 +1,112 @@
 # Backup and recovery
 
-Git, Crafty backups and off-host backups protect different parts of the system. Use all three when the worlds matter.
+This setup deliberately separates infrastructure configuration from Minecraft runtime data. They need different backup strategies.
 
 ## What Git protects
 
-Git protects the deployment definition and documentation, such as:
+Git protects the reproducible parts of the deployment:
 
-- `compose.yaml`
-- `.env.example`
-- documentation
-- repository workflows and policy files
+- `compose.yaml`;
+- documentation;
+- helper scripts;
+- example configuration;
+- upgrade history.
 
-Git should not contain live Minecraft worlds, Crafty runtime state, passwords, tokens, certificates or private deployment configuration.
+Git is **not** the backup system for Minecraft worlds.
 
-## What Crafty backups protect
+## What must be backed up separately
 
-Crafty backups protect Minecraft server data such as worlds and server files.
+Crafty runtime data includes:
 
-Schedule backups for servers that contain data you care about. Test that a backup can be restored before relying on the schedule as your only recovery plan.
+- Minecraft worlds;
+- server configuration;
+- Crafty state;
+- plugins and mods;
+- backups created from Crafty;
+- other files stored under the persistent Crafty data directory.
+
+This data should be copied to storage outside the VM or host.
+
+## Three useful layers
+
+A practical model is:
+
+```text
+Git remote
+    -> infrastructure configuration
+
+Crafty backups
+    -> convenient world/server rollback
+
+Off-host backup
+    -> protection from VM, disk or host loss
+```
+
+Each layer solves a different problem.
+
+## When to create a Crafty backup
+
+Back up before:
+
+- upgrading Minecraft versions;
+- changing server software;
+- large plugin or mod changes;
+- experimental configuration changes;
+- deleting a server or world;
+- any change where losing progress would be annoying.
+
+For worlds that matter, scheduled backups are preferable to relying on memory.
+
+## Consistency
+
+Minecraft writes world data while it is running. A backup method should therefore either coordinate correctly with the server or stop/quiesce the server while files are copied.
+
+Do not assume that copying a live world directory with arbitrary filesystem tools always produces a clean recovery point.
+
+Use Crafty's backup facilities for normal server-level backups, and test restores occasionally.
 
 ## Off-host backup
 
-A backup stored only on the same VM or disk does not protect against loss of that VM or storage device.
+Crafty's local backup directory should itself be copied somewhere independent of the Minecraft host.
 
-Copy important Crafty backups and/or the persistent Crafty data to another system on a regular schedule.
+Examples include:
 
-Good destinations include:
+- another NAS or storage system;
+- a separate backup server;
+- encrypted cloud/object storage;
+- another physical disk managed by a proper backup system.
 
-- another host
-- NAS storage
-- dedicated backup storage
-- an appropriate cloud backup target
+A backup that exists only on the same VM or same physical storage does not protect against loss of that storage.
 
-The exact destination is deployment-specific and should not be hard-coded into this public repository.
+## Recovery of one Minecraft server
 
-## Before upgrades
+For an ordinary server-level problem:
 
-Before changing the Crafty image version or making significant host changes:
-
-1. Confirm recent Minecraft backups exist.
-2. Confirm important backups have reached off-host storage.
-3. If the virtualization platform supports snapshots, consider taking a short-lived VM snapshot as an additional rollback aid.
-4. Perform the change deliberately.
-5. Verify Crafty and the Minecraft servers afterward.
-
-A VM snapshot is useful for short-term rollback but is not a substitute for a real backup.
-
-## Recovery: lost Minecraft world
-
-If Crafty and the host are healthy but a world/server needs to be restored:
-
-1. Stop the affected Minecraft server.
-2. Select a known-good Crafty backup.
-3. Restore it through Crafty.
+1. Stop the affected server if necessary.
+2. Choose a known-good Crafty backup.
+3. Restore it using Crafty's restore workflow.
 4. Start the server.
-5. Verify the world before resuming normal use.
+5. Check the console for errors.
+6. Join the server and verify the world.
 
-## Recovery: lost Crafty host
+## Recovery of the whole host
 
-If the VM or host is lost:
+On a replacement Linux host:
 
-1. Provision a replacement Linux host with Docker and Git.
+1. Install Docker and Git.
 2. Clone this repository.
-3. Create a fresh local `.env` from `.env.example`.
-4. Recreate the persistent data location.
-5. Restore Crafty persistent data/backups from off-host storage.
+3. Create `.env` from `.env.example` and adapt local paths.
+4. Restore the persistent Crafty data from off-host backup.
+5. Verify permissions and bind-mount paths.
 6. Run `docker compose config`.
-7. Pull and start the pinned Crafty image.
-8. Verify Crafty.
-9. Verify each Minecraft server and its port.
-10. Verify backups again after recovery.
+7. Run `docker compose up -d`.
+8. Verify Crafty, its server list and the Minecraft servers.
+9. Restore DNS/firewall/reverse-proxy configuration as needed.
 
-The repository makes rebuilding the service predictable, while the separate backup set restores the state that Git intentionally does not contain.
+The repository recreates the **deployment definition**. The runtime backup recreates the **actual Minecraft state**.
 
-## Recovery priorities
+## Test restores
 
-Think of the system in layers:
+A backup is only useful if it can be restored.
 
-```text
-Git repository       -> how the service is built
-Crafty persistent data -> current service/game state
-Crafty backups       -> recover individual servers/worlds
-Off-host backup      -> survive loss of the host/storage
-```
-
-Keeping these layers separate makes failures easier to reason about and prevents the Git repository from becoming a storage location for sensitive or constantly changing runtime data.
+Occasionally test a restore to a disposable Minecraft server or temporary environment. This verifies both the backup files and the recovery process without risking the active world.
