@@ -1,104 +1,151 @@
 # Public repository safety
 
-A public repository should contain reusable configuration and documentation, not private deployment state.
+This project is intended to be reusable and can be published, but changing a Git repository from private to public publishes more than the files visible on the current branch. **Git history, commit metadata, branches, tags, issues, Actions logs and other repository metadata may also become visible.**
 
-## Never commit secrets
+Use this checklist before changing repository visibility or when reviewing changes to a public repository.
+
+## 1. Keep deployment-specific information local
+
+The public repository should contain examples and reusable configuration, not a map of a real installation.
 
 Do not commit:
 
-- `.env` files with real values
-- passwords
-- API tokens
-- private keys
-- certificates containing private keys
-- Crafty credentials
-- backup archives
-- live Minecraft server data
-- private infrastructure configuration that does not need to be public
+- public or private IP addresses tied to a real deployment;
+- private/admin DNS names;
+- VPN configuration;
+- router or firewall exports;
+- SSH configuration containing real hosts;
+- usernames when they reveal unnecessary personal information;
+- screenshots containing addresses, account names, tokens or internal topology;
+- Crafty runtime configuration;
+- Minecraft worlds, player data or server logs;
+- backup archives.
 
-The repository's `.gitignore` blocks common local and runtime files, but `.gitignore` is only a safety net. Review every change before committing it.
-
-## Treat Git history as public
-
-Deleting a secret from the current branch does not remove it from previous commits.
-
-If a real credential is committed:
-
-1. Revoke or rotate it immediately.
-2. Remove it from the repository.
-3. Decide whether history rewriting is required.
-4. Assume the exposed value may already have been copied.
-
-See the repository [security policy](../../SECURITY.md) for the incident-handling expectations.
-
-## Secret scanning
-
-The repository runs Gitleaks over Git history on pushes and pull requests.
-
-A successful scan reduces the chance of accidentally publishing recognized secret formats, but it cannot prove that every piece of private information is absent.
-
-Human review still matters.
-
-## Keep runtime data outside Git
-
-Crafty runtime state and Minecraft worlds belong in persistent storage outside the repository working tree.
-
-The Git repository should contain the deployment definition. Backups should contain the game state.
-
-This separation also makes it possible to publish the repository without publishing player/world data.
-
-## Use examples for deployment-specific values
-
-Public configuration should use examples, placeholders or environment variables instead of embedding real deployment details.
-
-For example:
+Use documentation placeholders such as:
 
 ```text
+minecraft.example.net
+192.0.2.10
 <repository-url>
-<repository-directory>
+<host-address>
 ```
 
-Use `.env.example` to document required environment variables. Keep the real `.env` local to each deployment.
+The documentation may describe an architecture without publishing the details of a specific installation.
 
-## Review public-facing documentation
+## 2. Never commit credentials
 
-Before merging documentation, check for information that may be technically harmless but unnecessarily specific to a private installation, including:
+Never commit:
 
-- private hostnames
-- internal IP addresses
-- personal email addresses
-- usernames that identify private users
-- filesystem paths that expose unnecessary personal details
-- screenshots containing credentials or identifying data
+- `.env`;
+- passwords;
+- API keys or tokens;
+- SSH private keys;
+- TLS private keys;
+- keystores;
+- Crafty's generated credentials;
+- authentication cookies or session data.
 
-Generic paths such as `/srv/crafty` in examples are acceptable when they are clearly illustrative and contain no private data.
+`.gitignore` is a safety net, not a security boundary. Always inspect staged changes before committing:
 
-## GitHub Actions security
-
-Keep workflow permissions minimal. This repository's read-only validation workflows normally need only:
-
-```yaml
-permissions:
-  contents: read
+```bash
+git status
+git diff --cached
 ```
 
-Pin third-party GitHub Actions to an exact commit SHA so a moving tag cannot silently change the code executed by the workflow.
+## 3. Remember that Git keeps history
 
-Dependabot can propose updates to pinned Actions. Review those pull requests like any other dependency update.
+Removing a sensitive file in a later commit does **not** remove it from earlier commits.
 
-## Pull request checklist
+Inspect repository history rather than only the current checkout:
 
-Before merging a change to a public repository, verify:
+```bash
+git log --all --stat
+git log -p --all
+```
 
-- no real secrets or credentials are present
-- no runtime data is included
-- `.env` remains untracked
-- examples are generic
-- documentation does not leak unnecessary private infrastructure details
-- secret scanning passes
-- Markdown/YAML/workflow/Compose checks pass where applicable
-- the diff contains only the intended change
+The repository also runs Gitleaks in GitHub Actions with full history checked out. Verify that the **Secret scan** workflow is green.
 
-## If uncertain
+If a real secret has ever been committed, rotate/revoke the secret first. History rewriting is secondary; a secret should be treated as compromised once committed.
 
-If information is not necessary for someone to understand, deploy or operate the reusable project, leave it out of the public repository.
+## 4. Check tracked and ignored files
+
+Review exactly what Git is tracking:
+
+```bash
+git ls-files
+```
+
+Review ignored files too, so that an accidental force-add does not go unnoticed:
+
+```bash
+git status --ignored
+```
+
+Runtime directories should remain outside the working tree. If they are ever created inside it, the repository's `.gitignore` excludes the common Crafty runtime directory names.
+
+## 5. Check commit identity
+
+Public commits expose their commit metadata. If a personal email address should not be public, configure Git to use the GitHub-provided `noreply` address before making new commits.
+
+Check existing history with:
+
+```bash
+git log --format='%h %an <%ae>' --all
+```
+
+Changing Git configuration only affects future commits. Removing an email address from existing commit history requires rewriting history.
+
+## 6. Check names and privacy
+
+Repository names, branch names, commit messages and documentation are public metadata too.
+
+Decide deliberately whether names of people, households, schools, locations or projects should be associated with the public repository. This is a privacy decision even when it is not a technical security vulnerability.
+
+## 7. Minimize exposed services
+
+The Compose example publishes only the services needed for this setup:
+
+- Crafty's HTTPS port;
+- a small configurable Minecraft Java port range.
+
+Do not add ports merely because an application can use them. Add Bedrock, map servers or other services only when they are actually required.
+
+The Crafty administration interface should normally be restricted by a firewall, LAN/VPN policy or reverse-proxy access control. Publishing the source repository does not require publishing the administration interface.
+
+## 8. Review third-party automation
+
+GitHub Actions execute third-party code. This repository pins Actions to specific commit SHAs rather than floating branch or major-version references.
+
+When updating an Action:
+
+1. verify the upstream repository and release;
+2. review the release notes;
+3. update the pinned commit SHA;
+4. keep a version comment next to the SHA;
+5. review the resulting workflow run.
+
+## 9. GitHub security settings
+
+For a public repository, enable or verify GitHub's repository security features under **Settings → Advanced Security**, especially:
+
+- secret scanning;
+- push protection;
+- Dependabot alerts where applicable.
+
+GitHub provides secret scanning for public repositories. The repository-level Gitleaks workflow remains useful as an additional independent check.
+
+## Public repository checklist
+
+Verify all of the following:
+
+- current files contain no deployment-specific secrets or unnecessary personal data;
+- Git history has been reviewed;
+- commit author email exposure is acceptable;
+- `.env` and runtime data are not tracked;
+- no real credentials have ever been committed, or any that were have been revoked;
+- the Secret scan workflow passes;
+- repository/branch/commit names are acceptable as public metadata;
+- documentation uses examples rather than private infrastructure details;
+- no Actions logs or artifacts contain sensitive data.
+
+See the repository [security policy](../../SECURITY.md) for handling security problems and accidentally committed secrets.
