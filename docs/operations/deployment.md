@@ -1,31 +1,25 @@
 # Deployment and host operations
 
-This guide covers the host-side setup around Crafty Controller: Docker, persistent storage, networking and deliberate upgrades.
+This document is for the person responsible for the Linux host, Docker, networking and Crafty itself.
 
-## Prerequisites
+Minecraft administration should normally happen in Crafty instead. See [Crafty user guide](../getting-started/crafty.md).
 
-Install:
+## Repository vs runtime data
 
-- Linux
-- Docker Engine
-- Docker Compose plugin
-- Git
+Keep the Git repository and Crafty runtime data separate.
 
-Clone the repository and create a local environment file:
+Repository:
 
-```bash
-git clone <repository-url>
-cd <repository-directory>
-cp .env.example .env
+```text
+.
+├── compose.yaml
+├── .env.example
+├── .gitignore
+├── README.md
+└── docs/
 ```
 
-Edit `.env` for the host. Keep `.env` out of Git.
-
-## Persistent data
-
-Crafty runtime data must live outside the Git working tree. The Compose file expects a host path configured with `CRAFTY_DATA_DIR`.
-
-A typical layout is:
+Runtime data:
 
 ```text
 crafty-data/
@@ -36,94 +30,181 @@ crafty-data/
 └── servers/
 ```
 
-Create the directory structure before starting the stack if needed.
+Do not commit runtime data to Git.
 
-## Validate and start
+## Initial deployment
 
-Always validate the resolved Compose configuration before applying it:
+Clone the repository:
+
+```bash
+git clone <repository-url>
+cd <repository-directory>
+```
+
+Create the local environment file:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` for the host. It is intentionally excluded from Git.
+
+Create the persistent runtime directories at the path selected in `.env`.
+
+Then validate Compose:
 
 ```bash
 docker compose config
 ```
 
-Then pull and start the pinned Crafty image:
+Pull and start Crafty:
 
 ```bash
 docker compose pull
 docker compose up -d
 ```
 
-Check status and recent logs:
+Inspect status and logs:
 
 ```bash
 docker compose ps
 docker compose logs --tail=100
 ```
 
-## Networking
+## Version pinning
 
-Crafty's HTTPS administration interface should normally remain private to trusted networks, for example LAN or VPN.
+The Compose file should use a specific Crafty release rather than an automatically moving tag.
 
-Minecraft game ports are separate. Expose only the ports actually needed by players.
+Example:
 
-The repository uses a small configurable Java port range. Every simultaneously running Minecraft server must use a unique port from that range.
+```yaml
+image: registry.gitlab.com/crafty-controller/crafty-4:4.x.y
+```
 
-Do not expose the Crafty administration interface publicly unless there is a deliberate security design for doing so.
+This keeps deployments reproducible and makes upgrades visible in Git history.
+
+## Upgrading Crafty
+
+A deliberate upgrade flow is preferred:
+
+1. Read the release notes.
+2. Verify that important Minecraft data is backed up.
+3. Optionally take a VM or host snapshot.
+4. Change the Crafty image version in `compose.yaml`.
+5. Run `docker compose pull`.
+6. Run `docker compose up -d`.
+7. Verify Crafty login, server list and one Minecraft server.
+8. Commit the version change to Git.
+
+Avoid unattended container upgrades for this type of stateful service.
+
+## Networking model
+
+Treat the Crafty web interface and Minecraft game traffic as separate services.
+
+A sensible pattern is:
+
+```text
+Crafty web UI
+    -> private LAN/VPN access
+    -> optional reverse proxy with HTTPS
+
+Minecraft game ports
+    -> selectively exposed to the Internet
+    -> forwarded directly to the Minecraft host
+```
+
+The Crafty administrative interface does not need to be publicly reachable just because players need public Minecraft access.
+
+## Minecraft Java port range
+
+`compose.yaml` publishes a small configurable Java port range. The default is defined in `.env.example`:
+
+```text
+MC_JAVA_PORT_RANGE=25565-25575
+```
+
+Each simultaneously running Crafty server gets one unique port inside that range.
+
+If users should be able to create several public Minecraft servers without requiring a router change every time, forward the same small range 1:1 to the host, for example:
+
+```text
+WAN TCP 25565-25575
+        ->
+host TCP 25565-25575
+```
+
+Choose a range appropriate to the installation. Do not expose a much larger range merely for convenience.
+
+Minecraft Bedrock is **not** published by the default Compose configuration. If Bedrock is actually required, add its UDP port deliberately and document the change rather than exposing unused services by default.
+
+## Crafty HTTPS port
+
+Crafty's HTTPS host port is configurable through:
+
+```text
+CRAFTY_HTTPS_PORT=8443
+```
+
+Publishing a Docker port makes it reachable on host interfaces unless additional network controls restrict it. Protect Crafty's administrative interface with the host firewall, LAN/VPN policy, reverse-proxy ACLs, or equivalent controls.
 
 ## Reverse proxy
 
-A reverse proxy may terminate TLS in front of Crafty. Keep that configuration deployment-specific rather than committing private hostnames, addresses or certificates to this repository.
+A reverse proxy can provide a normal HTTPS hostname for Crafty while the container continues to listen on its internal HTTPS port.
 
-If access to Crafty is intended only for trusted networks, enforce that with reverse-proxy ACLs, firewall policy, VPN access or equivalent controls.
+The proxy should forward WebSocket traffic correctly where required and use a trusted TLS certificate.
 
-## Upgrades
+For a private administration service, access restrictions should normally be enforced at the proxy, firewall or VPN layer.
 
-The Crafty image is intentionally pinned to a specific version in `compose.yaml`.
+## Host maintenance
 
-Upgrade deliberately:
+Routine host maintenance includes:
 
-1. Read the release notes.
-2. Confirm that recent backups exist.
-3. Change the image version in Git.
-4. Let repository checks validate the change.
-5. Review and merge the pull request.
-6. Pull the updated repository on the host.
-7. Run `docker compose pull`.
-8. Run `docker compose up -d`.
-9. Verify Crafty and at least one Minecraft server.
+- Linux security updates;
+- Docker Engine updates;
+- monitoring free disk space;
+- verifying backups;
+- checking container health after restarts;
+- reviewing Crafty releases before upgrades.
 
-Avoid unattended container upgrades for this setup. A controlled upgrade is easier to troubleshoot and roll back.
+Minecraft worlds and server settings remain Crafty-level concerns unless recovery is required.
 
-## Updating the deployment
+## Useful commands
 
-After a reviewed Git change is merged:
-
-```bash
-git pull --ff-only
-docker compose config
-docker compose pull
-docker compose up -d
-```
-
-Then verify:
+Status:
 
 ```bash
 docker compose ps
+```
+
+Recent logs:
+
+```bash
 docker compose logs --tail=100
 ```
 
-## Separation of responsibilities
+Follow logs:
 
-Crafty users should be able to perform normal Minecraft administration through the Crafty web interface without needing shell access.
+```bash
+docker compose logs -f
+```
 
-Host administrators remain responsible for:
+Restart Crafty container:
 
-- Linux
-- Docker
-- networking
-- TLS/reverse proxy
-- Git deployment changes
-- host-level backups
-- recovery of the underlying service
+```bash
+docker compose restart
+```
 
-This separation keeps routine Minecraft administration simple without giving unnecessary access to the host operating system.
+Stop the deployment:
+
+```bash
+docker compose down
+```
+
+Start it again:
+
+```bash
+docker compose up -d
+```
+
+Removing the container does not remove bind-mounted Crafty runtime data, but backups should still exist before destructive maintenance.
