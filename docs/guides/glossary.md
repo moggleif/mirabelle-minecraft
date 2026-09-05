@@ -7,7 +7,7 @@ Every word on this site that might mean nothing to you yet, in plain language. S
 | Word | What it means |
 | --- | --- |
 | **Host** | The computer that runs everything and stays switched on. |
-| **Terminal** | A window where you type commands instead of clicking. |
+| **Terminal** | A window on the computer where you type commands instead of clicking. Not the same as Crafty's Terminal tab, below. |
 | **Command** | One line you type and run, like `docker compose ps`. |
 | **`sudo`** | "Do this as the computer's administrator." Asks for your password and shows nothing while you type it. |
 | **Linux** | The operating system this guide assumes on the host. |
@@ -37,7 +37,11 @@ Every word on this site that might mean nothing to you yet, in plain language. S
 | **Plugin** | An add-on for the server. Players do not install anything. |
 | **Mod** | A change to the game itself. Usually every player must install it too. |
 | **EULA** | Mojang's licence agreement. Every server has to accept it before it will start. |
-| **Console** | The live text feed from a running server. Where errors show up first. |
+| **Terminal tab** | The page in Crafty showing one server's live output, with a box to type commands to that server. It talks to Minecraft, not to the computer. |
+| **Logs tab** | The same output, kept for longer, when you need to scroll back. |
+| **Player Management** | The Crafty tab with Kick, Ban and Unban buttons. |
+| **Update Center** | The Crafty tab that changes which Minecraft version a server runs. |
+| **Console** | Another word for the Terminal tab — the live text feed from a running server. |
 | **`server.properties`** | The settings file for one Minecraft server. |
 | **MOTD** | The line of text players see next to your server in their list. |
 | **View distance** | How far players can see. The first thing to lower when the server lags. |

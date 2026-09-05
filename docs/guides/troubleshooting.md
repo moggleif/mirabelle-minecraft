@@ -4,15 +4,17 @@ Something will break. That is not a sign you did it wrong — it is the normal s
 
 **Jump to your problem:**
 
-- [The Crafty website will not open](#the-crafty-website-will-not-open)
+- [The Crafty website will not open](#the-crafty-website-will-not-open) — *needs the computer*
 - [The browser says the connection is not private](#the-browser-says-the-connection-is-not-private)
-- [I lost the Crafty password](#i-lost-the-crafty-password)
+- [I lost the Crafty password](#i-lost-the-crafty-password) — *needs the computer*
 - [A Minecraft server will not start](#a-minecraft-server-will-not-start)
 - [A friend cannot join](#a-friend-cannot-join)
 - [Everything is laggy](#everything-is-laggy)
-- [Permission denied about the data folder](#permission-denied-about-the-data-folder)
-- [Crafty keeps restarting on its own](#crafty-keeps-restarting-on-its-own)
+- [Permission denied about the data folder](#permission-denied-about-the-data-folder) — *needs the computer*
+- [Crafty keeps restarting on its own](#crafty-keeps-restarting-on-its-own) — *needs the computer*
 - [Nothing here helps](#nothing-here-helps)
+
+> **Two kinds of fix.** Most of these you do in Crafty, in your browser. The ones marked *needs the computer* mean typing in a terminal on the machine that runs the server. If that is not your computer, this is the moment to ask whoever set it up rather than guessing.
 
 ## How to look at an error
 
@@ -23,8 +25,8 @@ Two habits will solve most problems on their own:
 
 Where to look:
 
-- **A Minecraft server misbehaving** → that server's console in Crafty.
-- **Crafty itself misbehaving** → the terminal on the host, in the project folder:
+- **A Minecraft server misbehaving** → open that server in Crafty and read the **Terminal** tab. Everything the server says goes there, and the **Logs** tab keeps the older lines.
+- **Crafty itself misbehaving** → the terminal on the computer, in the project folder:
 
 ```bash
 docker compose ps
@@ -71,13 +73,13 @@ If you did change it and forgot it, Crafty's [own documentation](https://docs.cr
 
 ## A Minecraft server will not start
 
-Open its console and look for one of these.
+Open the server's **Terminal** tab in Crafty and look for one of these.
 
 **The EULA is not accepted.** Every Minecraft server has to agree to Mojang's licence. Accept it in Crafty and start again.
 
-**Something about failing to bind, or the address already being in use.** Two servers are trying to use the same port. Give one of them a different port — see [Memory, ports and extra servers](server-sizing.md).
+**Something about failing to bind, or the address already being in use.** Two servers are trying to use the same port. Change one of them: the server's **Config** tab → **Server Port** → save → start again. See [Memory, ports and extra servers](server-sizing.md).
 
-**Out of memory, or the server dies silently while starting.** The maximum memory is too low, or the host has run out. Lower the maximum, or stop another server that is running.
+**Out of memory, or the server dies silently while starting.** The maximum memory is too low, or the computer has run out. Stopping another running server is the quick fix; changing the memory itself means editing the **Execution Command** on the **Config** tab, or making a fresh server with better numbers.
 
 **Complaints about Java or the version.** Newer Minecraft versions need newer Java, and older ones sometimes need older Java. Match the Minecraft version to what your players actually have, and check what that version needs.
 
@@ -93,7 +95,7 @@ Old backups and stopped test servers are usually the easiest things to delete.
 
 Go through it in this order — the answer is almost always in the first three:
 
-1. **Are they on the whitelist?** Exact username, correct spelling.
+1. **Are they on the whitelist?** Exact username, correct spelling. Check with `whitelist list` in the server's **Terminal** tab.
 2. **Is their Minecraft version the same as the server's?** "Outdated client" or "outdated server" means exactly this.
 3. **Are they using the right address, with the port if it is not `25565`?**
 4. **Are they at home with you, or somewhere else?** From outside your network they need a forwarded port. See [Invite your friends](../getting-started/invite-friends.md).
@@ -105,8 +107,8 @@ Lag is usually the computer working too hard, not the server needing more memory
 
 Try, in this order:
 
-- Lower `view-distance` (try `8`, or `6`). This is by far the biggest win.
-- Lower `simulation-distance`.
+- Lower `view-distance` (try `8`, or `6`). This is by far the biggest win. **Files** tab → `server.properties` → change it → save → restart.
+- Lower `simulation-distance` in the same file.
 - Stop any other Minecraft servers that are running.
 - Look for what is causing it: huge farms, thousands of mobs or items on the ground, a heavy plugin, or the world generating brand new terrain because someone is exploring fast.
 

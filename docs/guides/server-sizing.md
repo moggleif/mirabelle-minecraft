@@ -4,6 +4,8 @@ Two numbers confuse everyone at the start: how much memory to give a server, and
 
 ## Memory: what to type
 
+You type these into the new-server wizard, as **Minimum Memory** and **Maximum Memory**, in GB.
+
 For a normal Paper server with a few friends on it:
 
 ```text
@@ -59,6 +61,10 @@ as long as you only ever have one or two of them started.
 
 Leave clear headroom for Linux, Docker and Crafty themselves. Handing almost all the machine's memory to Minecraft is how you get a host that freezes instead of a server that runs fast.
 
+### Changing memory afterwards
+
+Crafty's **Config** tab has no memory boxes. The numbers live inside the **Execution Command** line, as `-Xms` (minimum) and `-Xmx` (maximum). Editing that line works, but it is fiddly and easy to get wrong — for a test server it is often quicker to make a new one with better numbers.
+
 ## Ports: one door each
 
 Every server that runs at the same time needs its own port. Count upwards:
@@ -89,6 +95,8 @@ MC_JAVA_PORT_RANGE=25565-25575
 ```
 
 That is eleven possible servers, which is plenty. Stay inside the range when you create servers, and do not widen it just in case — every open port is another door to look after.
+
+A server's port is set in the wizard as **Server Port**, and changed later on its **Config** tab.
 
 ## A good starting point
 
